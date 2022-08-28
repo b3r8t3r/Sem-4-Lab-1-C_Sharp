@@ -1,29 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="SOLID.Program">
-    <Position X="0.5" Y="0.5" Width="6.75" />
+    <Position X="3.5" Y="2.25" Width="4.5" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
     <NestedTypes>
-      <Interface Name="SOLID.Program.IArtillery_weapon">
+      <Interface Name="SOLID.Program.IShoot" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Program.cs</NewMemberFileName>
         </TypeIdentifier>
       </Interface>
-      <Class Name="SOLID.Program.First_Weapon">
+      <Interface Name="SOLID.Program.IRequire_Ammo">
+        <TypeIdentifier>
+          <NewMemberFileName>Program.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Interface Name="SOLID.Program.IReload" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Program.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Interface>
+      <Class Name="SOLID.Program.Weapon_Shoot" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Program.cs</NewMemberFileName>
         </TypeIdentifier>
         <Lollipop Position="0.2" />
       </Class>
-      <Class Name="SOLID.Program.Second_Weapon">
+      <Class Name="SOLID.Program.Weapon_Reload" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Program.cs</NewMemberFileName>
         </TypeIdentifier>
         <Lollipop Position="0.2" />
       </Class>
-      <Class Name="SOLID.Program.Third_Weapon">
+      <Class Name="SOLID.Program.First_Weapon" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Program.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+      <Class Name="SOLID.Program.Weapon_Require_Ammo" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Program.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -31,7 +46,7 @@
       </Class>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAABAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>

@@ -5,35 +5,62 @@ namespace SOLID
 {
     class Program
     {
-        interface IArtillery_weapon
+        interface IShoot
+        {
+            void Shoot();
+        }
+
+        interface IRequire_Ammo
+        {
+            void Require_Ammo();
+        }
+
+        interface IReload
         {
             void Reload();
-            void Shoot();
-            void Require_Ammo();
-
         }
 
-        class First_Weapon : IArtillery_weapon
+        class Weapon_Require_Ammo : IRequire_Ammo
         {
-            int ammunition = 0;
+            protected int ammunition = 0;
 
-            KeyValuePair<int, int> ammunition_limits = new (0,45);
+            protected KeyValuePair<int, int> ammunition_limits;
 
-            List<bool> magazine = new();
-
-            public First_Weapon(int _ammo)
+            public void Require_Ammo()  //Метод, отвечающий за восполнение боеприпасов
             {
-                for (int i = 0; i < ammunition_limits.Value/3; i++)
-                    magazine.Add(false);
-
-                ammunition = (_ammo >= ammunition_limits.Key && _ammo <= ammunition_limits.Value) ? _ammo : 0;
+                Console.WriteLine("Require ammunition!\n\n");
+                ammunition = ammunition_limits.Value - ammunition;
             }
-            public void Reload()
+        }
+
+        class Weapon_Shoot : Weapon_Require_Ammo, IShoot
+        {
+            protected List<bool> magazine = new();    //Магазин, содержащий определенное количество боеприпасов
+
+            public void Shoot()
+            {
+                for (int i = magazine.Count - 1; i > 0; i--)
+                {
+                    if (magazine[i])
+                    {
+
+                        magazine[i] = false;
+                        Console.WriteLine("Bang!");
+                    }
+
+                }
+                Console.WriteLine();
+            }
+        }
+
+        class Weapon_Reload : Weapon_Shoot,  IReload 
+        {
+            public void Reload()  //Метод, отвечающий за перезарядку орудия
             {
                 Console.WriteLine("Reloading...");
-                int remains = 0;
+                int remains = 0;    //Переменная, отвечающая за оставшееся количество патрон в магазине
 
-                for (int i = 0; i < magazine.Count; i++)
+                for (int i = 0; i < magazine.Count; i++)    //Цикл, отвечающий за проверку на наличие оставшихся в магазине патронов с последующим их выниманием в случае обнаружения
                 {
                     if (magazine[i])
                     {
@@ -41,9 +68,9 @@ namespace SOLID
                         magazine[i] = false;
                     }
                 }
-                ammunition += remains;
+                ammunition += remains;  //Вынутые патроны добавляются к общему количеству боеприпасов
 
-                for (int i = 0; i < magazine.Count; i++)
+                for (int i = 0; i < magazine.Count; i++)    //Цикл, отвечающий за перезарядку орудия
                 {
                     if (ammunition > 0)
                     {
@@ -54,244 +81,39 @@ namespace SOLID
                 }
                 Console.WriteLine($"Current ammunition: {ammunition}\n");
             }
-            public void Shoot()
-            {
-                for (int i = magazine.Count - 1; i > 0; i--)
-                {
-                    if (magazine[i]) 
-                    {
-                        for (int j = i; j >= 0; j -= 3)
-                        {
-                            if (magazine[j])
-                            {
-                                for (int temp = 0; temp < 3; temp++)
-                                {
-                                    if (j - temp >= 0)
-                                    {
-                                        magazine[j - temp] = false;
-                                        Console.WriteLine("Bang!");
-                                    }
-                                }
-
-                                break;
-                            }
-                            
-                        }
-                        Console.WriteLine();
-                        break;
-                    }
-                    
-                }
-                
-            }
-
-            public void Require_Ammo()
-            {
-                Console.WriteLine("Require ammunition!\n\n");
-                ammunition = ammunition_limits.Value - ammunition;
-            }
         }
 
-        class Second_Weapon : IArtillery_weapon
+        class First_Weapon : Weapon_Reload  //Первый тип артиллерийских орудий
         {
-            int ammunition = 0;
 
-            KeyValuePair<int, int> ammunition_limits = new (0,30);
+            KeyValuePair<int, int> ammunition_limits = new (0,45);  //Ограничители количества боеприпасов на орудие
 
-            List<bool> magazine = new();
-
-            public Second_Weapon(int _ammo)
+            public First_Weapon(int _ammo)  //Конструктор класса, принимающий в себя изначальное количество боеприпасов
             {
-                for (int i = 0; i < ammunition_limits.Value / 3; i++)
+                for (int i = 0; i < ammunition_limits.Value / 3; i++) //Установка количества боеприпасов в магазине
                     magazine.Add(false);
 
-                ammunition = (_ammo >= ammunition_limits.Key && _ammo <= ammunition_limits.Value) ? _ammo : 0;
+                ammunition = (_ammo >= ammunition_limits.Key && _ammo <= ammunition_limits.Value) ? _ammo : 0;  //Если принимаемое конструктором количество боеприпасов находится в установленных границах, то значение присваивается переменной; если нет, то присваивается 0
             }
-            public void Reload()
-            {
-                Console.WriteLine("Reloading...");
-                int remains = 0;
-
-                for (int i = 0; i < magazine.Count; i++)
-                {
-                    if (magazine[i])
-                    {
-                        remains++;
-                        magazine[i] = false;
-                    }
-                }
-                ammunition += remains;
-
-                for (int i = 0; i < magazine.Count; i++)
-                {
-                    if (ammunition > 0)
-                    {
-                        magazine[i] = true;
-                        ammunition--;
-                    }
-                    else break;
-                }
-                Console.WriteLine($"Current ammunition: {ammunition}\n");
-            }
-            public void Shoot()
-            {
-                for (int i = magazine.Count - 1; i > 0; i--)
-                {
-                    if (magazine[i])
-                    {
-                        for (int j = i; j >= 0; j -= 2)
-                        {
-                            if (magazine[j])
-                            {
-                                for (int temp = 0; temp < 2; temp++)
-                                {
-                                    if (j - temp >= 0)
-                                    {
-                                        magazine[j - temp] = false;
-                                        Console.WriteLine("Bang!");
-                                    }
-                                }
-
-                                break;
-                            }
-
-                        }
-                        Console.WriteLine();
-                        break;
-                    }
-
-                }
-
-            }
-
-            public void Require_Ammo()
-            {
-                Console.WriteLine("Require ammunition!\n\n");
-                ammunition = ammunition_limits.Value - ammunition;
-            }
+            
         }
 
-        class Third_Weapon : IArtillery_weapon
+
+        static void Fire()  //Метод, отвечающий за процесс работы орудий
         {
-            int ammunition = 0;
+            First_Weapon weapon = new (30);
 
-            KeyValuePair<int, int> ammunition_limits = new (0,15);
-
-            List<bool> magazine = new();
-
-            public Third_Weapon(int _ammo)
-            {
-                for (int i = 0; i < ammunition_limits.Value / 3; i++)
-                    magazine.Add(false);
-
-                ammunition = (_ammo >= ammunition_limits.Key && _ammo <= ammunition_limits.Value) ? _ammo : 0;
-            }
-            public void Reload()
-            {
-                Console.WriteLine("Reloading...");
-                int remains = 0;
-
-                for (int i = 0; i < magazine.Count; i++)
-                {
-                    if (magazine[i])
-                    {
-                        remains++;
-                        magazine[i] = false;
-                    }
-                }
-                ammunition += remains;
-
-                for (int i = 0; i < magazine.Count; i++)
-                {
-                    if (ammunition > 0)
-                    {
-                        magazine[i] = true;
-                        ammunition--;
-                    }
-                    else break;
-                }
-                Console.WriteLine($"Current ammunition: {ammunition}\n");
-            }
-            public void Shoot()
-            {
-                for (int i = magazine.Count - 1; i > 0; i--)
-                {
-                    if (magazine[i])
-                    {
-                        for (int j = i; j >= 0; j--)
-                        {
-                            if (magazine[j])
-                            {
-                                for (int temp = 0; temp < 1; temp++)
-                                {
-                                    if (j - temp >= 0)
-                                    {
-                                        magazine[j - temp] = false;
-                                        Console.WriteLine("Bang!");
-                                    }
-                                }
-
-                                break;
-                            }
-
-                        }
-                        Console.WriteLine();
-                        break;
-                    }
-
-                }
-
-            }
-
-            public void Require_Ammo()
-            {
-                Console.WriteLine("Require ammunition!\n\n");
-                ammunition = ammunition_limits.Value - ammunition;
-            }
-        }
-
-        static void Fire()
-        {
-            List<IArtillery_weapon> weapons = new List<IArtillery_weapon>() {new First_Weapon(14), new Second_Weapon(20), new Third_Weapon(6)};
-
-            for (int i = 0; i < 2; i++)
-            {
-                for (int j = 0; j < 3; j++)
-                {
-                    weapons[0].Reload();
-                    weapons[0].Shoot();
-                    weapons[0].Shoot();
-                    weapons[0].Shoot();
-                    weapons[0].Shoot();
-                    weapons[0].Shoot();
-
-                    weapons[1].Reload();
-                    weapons[1].Shoot();
-                    weapons[1].Shoot();
-                    weapons[1].Shoot();
-                    weapons[1].Shoot();
-                    weapons[1].Shoot();
-
-                    weapons[2].Reload();
-                    weapons[2].Shoot();
-                    weapons[2].Shoot();
-                    weapons[2].Shoot();
-                    weapons[2].Shoot();
-                    weapons[2].Shoot();
-                }
-                weapons[0].Require_Ammo();
-
-                weapons[1].Require_Ammo();
-
-                weapons[2].Require_Ammo();
-            }
+            weapon.Reload();
+            weapon.Shoot();
+            weapon.Reload();
+            weapon.Shoot();
+            weapon.Require_Ammo();
         }
 
         static void Main(string[] args)
         {
             Fire();
-
-
         }
     }
 }
+
